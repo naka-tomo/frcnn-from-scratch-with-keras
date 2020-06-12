@@ -18,9 +18,13 @@ from keras.utils.data_utils import get_file
 from keras import backend as K
 from keras_frcnn.RoiPoolingConv import RoiPoolingConv
 
+# K.image_dim_ordering()がなくなったため，とりあえず対処
+def image_dim_ordering():
+  return "tf"
+
 
 def get_weight_path():
-    if K.image_dim_ordering() == 'th':
+    if image_dim_ordering() == 'th':
         print('pretrained weights not available for VGG with theano backend')
         return
     else:
@@ -37,7 +41,7 @@ def nn_base(input_tensor=None, trainable=False):
 
 
     # Determine proper input shape
-    if K.image_dim_ordering() == 'th':
+    if image_dim_ordering() == 'th':
         input_shape = (3, None, None)
     else:
         input_shape = (None, None, 3)
@@ -50,7 +54,7 @@ def nn_base(input_tensor=None, trainable=False):
         else:
             img_input = input_tensor
 
-    if K.image_dim_ordering() == 'tf':
+    if image_dim_ordering() == 'tf':
         bn_axis = 3
     else:
         bn_axis = 1
